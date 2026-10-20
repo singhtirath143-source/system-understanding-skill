@@ -75,7 +75,7 @@ area that doesn't apply (say, there's no database) still gets one line in the re
 ## How it stays safe
 
 - **Read only.** The agent reads files, searches and runs read-only git commands. It doesn't install packages,
-  run builds or migrations, start the app or call external services.
+  run builds or migrations, start the app or call external services (unless you ask it to clone a remote repo).
 - **Report, don't fix.** It names problems so a person can decide what to do. It doesn't propose fixes or write
   code.
 - **No secrets.** Environment variables and keys appear by name only, never their values.

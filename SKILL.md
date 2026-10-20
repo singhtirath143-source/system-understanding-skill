@@ -38,16 +38,16 @@ showed it.
 **Never guess silently.** If you can't find something, write **Not found** and where you looked. If you infer
 something rather than see it, label it **Inferred** and say why.
 
-**Check history for removals.** When a ticket, doc, or seed says something was removed or renamed, verify it
-with `git log -S '<name>'`. It may have been re-added, or may never have existed in this repo.
+**Check history for removals.** When a ticket, doc, or the brief you were given says something was removed or
+renamed, verify it with `git log -S '<name>'`. It may have been re-added, or may never have existed in this repo.
 
 **Code beats docs.** When a README, example config file, or ticket comment disagrees with the code, the code is
 the finding. Record the disagreement as drift, citing both.
 
-**Remote repos.** If the repo isn't local and the user allows it, clone it read-only into a temporary folder
-outside any workspace (e.g. `/tmp`). Never commit, push, or edit inside the clone, and never write the report
-into it. If the clone or auth fails, stop and say so. Never print `git remote -v`, `.git/config`, or clone URLs
-raw: remote URLs can embed tokens.
+**Remote repos.** The one exception to "no external calls": if the repo isn't local and the user allows it,
+clone it read-only into a temporary folder outside any workspace (e.g. `/tmp`). Never commit, push, or edit
+inside the clone, and never write the report into it. If the clone or auth fails, stop and say so. Never print
+`git remote -v`, `.git/config`, or clone URLs raw: remote URLs can embed tokens.
 
 **No secrets in the report.** Never copy API keys, tokens, passwords, connection strings or credentialed URLs.
 Name the variable and where it's read (`DATABASE_URL`, read in `src/db.ts:3`).
@@ -377,7 +377,8 @@ Then tell the user the file's path and give the Summary section in chat.
 
 **Scoped runs.** If the user asks for one slice (for example a configuration inventory), run Phase 0 plus only
 the phases they name. Use the user's output format instead of the 10-section structure. Keep the coverage note
-(read, skipped or sampled, Not found) at the top. Write only to the path the user names.
+(read, skipped or sampled, Not found) at the top. Write only to the path the user names (ask once if they
+haven't).
 
 Otherwise, you MUST output EXACTLY this structure. Each phase's OUTPUT headings go inside its numbered section as `###`
 subsections.
