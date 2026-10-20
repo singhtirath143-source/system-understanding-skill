@@ -38,6 +38,17 @@ showed it.
 **Never guess silently.** If you can't find something, write **Not found** and where you looked. If you infer
 something rather than see it, label it **Inferred** and say why.
 
+**Check history for removals.** When a ticket, doc, or seed says something was removed or renamed, verify it
+with `git log -S '<name>'`. It may have been re-added, or may never have existed in this repo.
+
+**Code beats docs.** When a README, example config file, or ticket comment disagrees with the code, the code is
+the finding. Record the disagreement as drift, citing both.
+
+**Remote repos.** If the repo isn't local and the user allows it, clone it read-only into a temporary folder
+outside any workspace (e.g. `/tmp`). Never commit, push, or edit inside the clone, and never write the report
+into it. If the clone or auth fails, stop and say so. Never print `git remote -v`, `.git/config`, or clone URLs
+raw: remote URLs can embed tokens.
+
 **No secrets in the report.** Never copy API keys, tokens, passwords, connection strings or credentialed URLs.
 Name the variable and where it's read (`DATABASE_URL`, read in `src/db.ts:3`).
 
@@ -103,7 +114,13 @@ Identify:
 - shared types
 - utilities
 - config files
-- environment variables (names only) and where each is read
+- environment variables (names only), where each is read, and whether that reader actually runs: trace it to a
+  registration, trigger, or entry point. A reader nothing calls is **Dormant**, not required.
+- config reads that don't look like lookups (examples, adapt to the stack): binding expressions in trigger or
+  decorator attributes (e.g. `%Section:Key%`), options/settings classes bound by section name (each property is a
+  key; its initializer is the default), fallback chains (`a ?? b`, `a || b`, `getenv(x, default)`), and equivalent
+  spellings (`A:B` = `A__B`; a helper that reads `X` from a named section counts as reading `Section:X`). A key
+  with a code default is optional.
 - build / test / run commands (scripts, Makefile, README)
 - CI and hosting config
 
@@ -346,6 +363,9 @@ Save the report as a Markdown file. Writing it is the one change you make, so if
 ask once before writing. Suggest `docs/system-understanding/YYYY-MM-DD-system-understanding.md` in the project
 (or the repo's own docs convention), or a folder outside the repo if nothing in it may change.
 
+Before writing, re-open every cited `file:line` and confirm it says what the report claims. Don't cite from
+memory or earlier notes, especially after a long session.
+
 If a report from an earlier date exists, write a new dated file (don't overwrite it) and add a
 "Changed since last report" section.
 
@@ -355,7 +375,11 @@ Then tell the user the file's path and give the Summary section in chat.
 
 # 📊 FINAL OUTPUT FORMAT (MANDATORY)
 
-You MUST output EXACTLY this structure. Each phase's OUTPUT headings go inside its numbered section as `###`
+**Scoped runs.** If the user asks for one slice (for example a configuration inventory), run Phase 0 plus only
+the phases they name. Use the user's output format instead of the 10-section structure. Keep the coverage note
+(read, skipped or sampled, Not found) at the top. Write only to the path the user names.
+
+Otherwise, you MUST output EXACTLY this structure. Each phase's OUTPUT headings go inside its numbered section as `###`
 subsections.
 
 ---
